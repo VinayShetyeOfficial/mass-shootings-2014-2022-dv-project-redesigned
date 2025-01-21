@@ -44,7 +44,6 @@ export default function ExploreMenu({ isVisible }) {
   };
 
   const handleKeyDown = (e) => {
-    // If user presses Enter and there is exactly one suggestion, auto-select
     if (e.key === "Enter" && suggestions.length === 1) {
       handleStateSelection(suggestions[0][1]);
     }
@@ -106,7 +105,6 @@ export default function ExploreMenu({ isVisible }) {
         All Datapoints
       </button>
 
-      {/* State lookup */}
       <div className="relative">
         <input
           type="text"

@@ -23,7 +23,6 @@ export default function MapComponent() {
     selectedCategory,
   } = useContext(MapContext);
 
-  // Each time selectedYear or selectedCategory changes, re-load/filter the CSV
   useEffect(() => {
     fetch("/data/mass_shootings_geocoded_cleaned.csv")
       .then((res) => res.text())

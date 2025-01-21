@@ -23,7 +23,7 @@ export async function getCoordinatesFromAddress(address) {
         console.warn(
           `Geocoding failed for address "${address}" with status: ${status}`
         );
-        resolve(null); // Return null so we can skip this row in our data
+        resolve(null);
       }
     });
   });

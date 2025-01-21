@@ -1,7 +1,6 @@
 "use client";
 import Papa from "papaparse";
 
-// Updated parse function to include filtering by year and category
 export async function processCSVData(
   csvText,
   selectedYear = "All",
@@ -23,11 +22,9 @@ export async function processCSVData(
               return false;
             }
 
-            // Extract the 4-digit year and parse it as a number
             const yearStr = row["Incident Date"].split(", ")[1]?.trim();
             const incidentYear = parseInt(yearStr, 10);
 
-            // If your selectedYear is also a number (e.g. 2014), compare them numerically.
             if (
               selectedYear !== "All" &&
               incidentYear !== parseInt(selectedYear, 10)

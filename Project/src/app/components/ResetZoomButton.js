@@ -7,7 +7,6 @@ export default function ResetZoomButton() {
 
   const handleResetZoom = () => {
     if (map) {
-      // Reset to the same center & zoom used in MapComponent
       map.setZoom(4.8);
       map.setCenter({ lat: 38.5, lng: -100.55 });
     }

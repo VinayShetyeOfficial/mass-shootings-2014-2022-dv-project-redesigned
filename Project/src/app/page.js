@@ -17,7 +17,6 @@ export default function MainPage() {
   return (
     <div className="relative">
       <MapComponent />
-      {/* We pass isVisible to menus, so they can fade in/out */}
       <ExploreMenu isVisible={menuVisible} />
       <VisualizationMenu isVisible={menuVisible} />
       <YearSelector isVisible={menuVisible} />
