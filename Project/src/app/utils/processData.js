@@ -1,4 +1,5 @@
 "use client";
+
 import Papa from "papaparse";
 
 export async function processCSVData(
@@ -32,8 +33,9 @@ export async function processCSVData(
               return false;
             }
 
-            const killed = parseInt(row["Victims Killed"] || "0", 10);
-            const isFatal = killed > 0;
+            const killedNum = parseInt(row["Victims Killed"] || "0", 10);
+            const injuredNum = parseInt(row["Victims Injured"] || "0", 10);
+            const isFatal = killedNum > 0;
 
             if (selectedCategory === "Fatal" && !isFatal) {
               return false;
@@ -42,15 +44,22 @@ export async function processCSVData(
             }
             return true;
           })
-          .map((row) => ({
-            id: row["Incident ID"],
-            state: row["State"] || "Unknown",
-            fatal: parseInt(row["Victims Killed"] || "0", 10) > 0,
-            position: {
-              lat: parseFloat(row["Latitude"]),
-              lng: parseFloat(row["Longitude"]),
-            },
-          }));
+          .map((row) => {
+            const killedNum = parseInt(row["Victims Killed"] || "0", 10);
+            const injuredNum = parseInt(row["Victims Injured"] || "0", 10);
+
+            return {
+              id: row["Incident ID"],
+              state: row["State"] || "Unknown",
+              fatal: killedNum > 0,
+              killed: killedNum, // NEW
+              injured: injuredNum, // NEW
+              position: {
+                lat: parseFloat(row["Latitude"]),
+                lng: parseFloat(row["Longitude"]),
+              },
+            };
+          });
 
         resolve(processedData);
       },
