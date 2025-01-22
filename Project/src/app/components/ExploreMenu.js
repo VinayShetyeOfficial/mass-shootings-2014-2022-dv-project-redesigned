@@ -2,13 +2,21 @@
 
 import { useContext, useState } from "react";
 import { MapContext } from "../context/MapContext";
+import StateSummary from "./StateSummary";
 import RoomIcon from "@mui/icons-material/Room";
 import SearchIcon from "@mui/icons-material/Search";
 import { states } from "../../../public/data/states";
 
 export default function ExploreMenu({ isVisible }) {
-  const { map, incidentMarkers, selectedCategory, setSelectedCategory } =
-    useContext(MapContext);
+  const {
+    map,
+    incidentMarkers,
+    selectedCategory,
+    setSelectedCategory,
+
+    setSelectedStateName,
+  } = useContext(MapContext);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
@@ -31,6 +39,9 @@ export default function ExploreMenu({ isVisible }) {
   const handleStateSelection = (stateName) => {
     setSearchQuery(stateName);
     setSuggestions([]);
+
+    // NEW: store that state in MapContext
+    setSelectedStateName(stateName);
 
     if (map && incidentMarkers.length > 0) {
       const stateIncidents = incidentMarkers.filter(
@@ -129,6 +140,8 @@ export default function ExploreMenu({ isVisible }) {
           </ul>
         )}
       </div>
+
+      <StateSummary />
     </div>
   );
 }
