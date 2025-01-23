@@ -15,7 +15,7 @@ export default function ResetZoomButton() {
   return (
     <button
       onClick={handleResetZoom}
-      className="absolute px-6 py-3 text-lg font-bold text-white bg-red-600 rounded-lg shadow-lg bottom-2 right-2"
+      className="absolute px-6 py-3 text-lg font-bold text-white transition-all duration-300 rounded-lg bottom-2 right-2 bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:outline-none"
     >
       Reset Zoom
     </button>
