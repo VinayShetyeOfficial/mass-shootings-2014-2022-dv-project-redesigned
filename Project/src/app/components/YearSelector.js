@@ -16,8 +16,10 @@ export default function YearSelector({ isVisible }) {
       {years.map((year) => (
         <button
           key={year}
-          className={`py-2 px-4 rounded text-lg font-semibold ${
-            selectedYear === year ? "bg-blue-600 text-white" : "bg-gray-300"
+          className={`py-2 px-4 rounded text-lg font-semibold transition-all duration-300 ${
+            selectedYear === year
+              ? "bg-[#16a34a] text-white"
+              : "bg-gray-300 hover:bg-gradient-to-br hover:via-blue-600 hover:to-blue-700"
           }`}
           onClick={() => setSelectedYear(year)}
         >
