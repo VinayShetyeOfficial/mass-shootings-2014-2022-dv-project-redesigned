@@ -1,15 +1,13 @@
 export default function LineChartsPage() {
   return (
-    <div className="text-center p-10">
-      <h1 className="text-3xl font-bold text-yellow-600">Line Charts</h1>
-      <p className="mt-4 text-gray-700">
-        Track trends over the years for different states.
-      </p>
+    <div className="p-10 text-center">
+      <h1 className="text-3xl font-bold">Line Charts</h1>
+      <p>Line Charts visualization will be here.</p>
       <a
         href="/"
-        className="mt-8 inline-block bg-blue-500 text-white py-2 px-4 rounded"
+        className="inline-block px-4 py-2 mt-5 text-white bg-blue-500 rounded"
       >
-        Go to Main Page
+        Back to Home
       </a>
     </div>
   );
