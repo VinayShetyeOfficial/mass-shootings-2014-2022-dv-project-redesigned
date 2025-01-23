@@ -13,7 +13,6 @@ export default function ExploreMenu({ isVisible }) {
     incidentMarkers,
     selectedCategory,
     setSelectedCategory,
-
     setSelectedStateName,
   } = useContext(MapContext);
 
@@ -40,7 +39,6 @@ export default function ExploreMenu({ isVisible }) {
     setSearchQuery(stateName);
     setSuggestions([]);
 
-    // NEW: store that state in MapContext
     setSelectedStateName(stateName);
 
     if (map && incidentMarkers.length > 0) {
@@ -62,20 +60,20 @@ export default function ExploreMenu({ isVisible }) {
 
   return (
     <div
-      className={`absolute max-h-full p-3 text-white bg-gray-900 rounded-lg top-2 left-2 bg-opacity-90 transition-opacity duration-500 ${
+      className={`absolute max-h-full p-4 text-white bg-gray-900 rounded-lg top-2 left-2 bg-opacity-90 transition-opacity duration-500 ${
         isVisible ? "opacity-100 visible" : "opacity-0 invisible"
       }`}
     >
-      <h2 className="mb-2 text-2xl font-bold text-center">Explore</h2>
+      <h2 className="mb-3 text-2xl font-bold text-center">Explore</h2>
 
       {/* Category buttons */}
-      <div className="flex mb-2 space-x-2">
+      <div className="flex mb-3 space-x-2">
         <button
           onClick={() => setSelectedCategory("Fatal")}
-          className={`flex items-baseline justify-center w-3/4 p-3 text-lg font-semibold rounded
+          className={`flex items-baseline justify-center w-3/4 p-3 text-lg font-semibold rounded 
             ${
               selectedCategory === "Fatal"
-                ? "bg-white text-neutral-950"
+                ? "bg-gray-100 text-gray-800"
                 : "bg-gray-700 text-white"
             }
           `}
@@ -88,10 +86,10 @@ export default function ExploreMenu({ isVisible }) {
 
         <button
           onClick={() => setSelectedCategory("Nonfatal")}
-          className={`flex items-baseline justify-center w-3/4 p-3 text-lg font-semibold rounded
+          className={`flex items-baseline justify-center w-3/4 p-3 text-lg font-semibold rounded 
             ${
               selectedCategory === "Nonfatal"
-                ? "bg-white text-neutral-950"
+                ? "bg-gray-100 text-gray-800"
                 : "bg-gray-700 text-white"
             }
           `}
@@ -108,7 +106,7 @@ export default function ExploreMenu({ isVisible }) {
         className={`w-full p-3 mb-2 text-lg font-semibold rounded
           ${
             selectedCategory === "All"
-              ? "bg-white text-neutral-950"
+              ? "bg-gray-100 text-gray-800"
               : "bg-gray-700 text-white"
           }
         `}
