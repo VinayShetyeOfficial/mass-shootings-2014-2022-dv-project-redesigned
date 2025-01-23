@@ -1,17 +1,13 @@
 export default function NetworkPage() {
   return (
-    <div className="text-center p-10">
-      <h1 className="text-3xl font-bold text-green-600">
-        Network Visualization
-      </h1>
-      <p className="mt-4 text-gray-700">
-        Visualizing relationships between mass shootings incidents.
-      </p>
+    <div className="p-10 text-center">
+      <h1 className="text-3xl font-bold">Network</h1>
+      <p>Network visualization will be here.</p>
       <a
         href="/"
-        className="mt-8 inline-block bg-blue-500 text-white py-2 px-4 rounded"
+        className="inline-block px-4 py-2 mt-5 text-white bg-blue-500 rounded"
       >
-        Go to Main Page
+        Back to Home
       </a>
     </div>
   );
