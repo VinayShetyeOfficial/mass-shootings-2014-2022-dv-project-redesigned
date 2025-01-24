@@ -3,6 +3,25 @@
 import RoomIcon from "@mui/icons-material/Room";
 
 export default function Legend({ viewType, setViewType }) {
+  const legendData = {
+    fatal: [
+      { color: "#ffedea", label: "Risk Level (1-20)" },
+      { color: "#ffcec5", label: "Risk Level (20-50)" },
+      { color: "#ffad9f", label: "Risk Level (50-100)" },
+      { color: "#ff6f5e", label: "Risk Level (100-200)" },
+      { color: "#ff3f2e", label: "Risk Level (200-500)" },
+      { color: "#ff1100", label: "Risk Level (>500)" },
+    ],
+    injured: [
+      { color: "#edf8fb", label: "Injuries (1-20)" },
+      { color: "#cce5ff", label: "Injuries (20-50)" },
+      { color: "#99c2ff", label: "Injuries (50-100)" },
+      { color: "#6699ff", label: "Injuries (100-200)" },
+      { color: "#3366ff", label: "Injuries (200-500)" },
+      { color: "#0033cc", label: "Injuries (>500)" },
+    ],
+  };
+
   return (
     <div className="absolute max-h-full p-4 text-white bg-gray-900 rounded-lg shadow-lg top-2 left-2 bg-opacity-90">
       <h2 className="mb-3 text-2xl font-bold text-center">Legend</h2>
@@ -34,7 +53,7 @@ export default function Legend({ viewType, setViewType }) {
             }
           `}
         >
-          <span className="pr-2 text-2xl text-yellow-500">
+          <span className="pr-2 text-2xl text-blue-500">
             <RoomIcon />
           </span>
           Nonfatal
@@ -46,40 +65,15 @@ export default function Legend({ viewType, setViewType }) {
       </div>
 
       <div className="space-y-3 text-gray-200">
-        <div className="flex items-center">
-          <div
-            className={`w-12 h-4 rounded-sm ${
-              viewType === "fatal" ? "bg-red-200" : "bg-blue-200"
-            }`}
-          ></div>
-          <span className="ml-3 text-sm">
-            {viewType === "fatal" ? "Low Risk (0-50)" : "Low Injuries (0-50)"}
-          </span>
-        </div>
-        <div className="flex items-center">
-          <div
-            className={`w-12 h-4 rounded-sm ${
-              viewType === "fatal" ? "bg-red-400" : "bg-blue-400"
-            }`}
-          ></div>
-          <span className="ml-3 text-sm">
-            {viewType === "fatal"
-              ? "Moderate Risk (50-150)"
-              : "Moderate Injuries (50-150)"}
-          </span>
-        </div>
-        <div className="flex items-center">
-          <div
-            className={`w-12 h-4 rounded-sm ${
-              viewType === "fatal" ? "bg-red-600" : "bg-blue-600"
-            }`}
-          ></div>
-          <span className="ml-3 text-sm">
-            {viewType === "fatal"
-              ? "High Risk (150+)"
-              : "Severe Injuries (150+)"}
-          </span>
-        </div>
+        {legendData[viewType].map((item, index) => (
+          <div key={index} className="flex items-center">
+            <div
+              className={`w-12 h-4 rounded-sm`}
+              style={{ backgroundColor: item.color }}
+            ></div>
+            <span className="ml-3 text-sm">{item.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
