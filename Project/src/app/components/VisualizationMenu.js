@@ -1,6 +1,10 @@
 "use client";
 
-export default function VisualizationMenu({ isVisible }) {
+export default function VisualizationMenu({
+  isVisible,
+  redirectTo = "/visualizations/choropleth",
+  title = "Choropleth Maps",
+}) {
   return (
     <div
       className={`absolute p-4 text-white bg-gray-900 rounded-lg top-2 right-2 bg-opacity-90 transition-all duration-500 ${
@@ -15,10 +19,10 @@ export default function VisualizationMenu({ isVisible }) {
 
       <nav className="space-y-2">
         <a
-          href="/visualizations/choropleth"
+          href={redirectTo}
           className="block p-4 text-lg font-semibold text-center transition-all duration-300 bg-gray-700 rounded-lg hover:bg-gradient-to-br hover:from-blue-500 hover:via-blue-600 hover:to-blue-700 focus:outline-none"
         >
-          Choropleth Maps
+          {title}
         </a>
 
         <a
