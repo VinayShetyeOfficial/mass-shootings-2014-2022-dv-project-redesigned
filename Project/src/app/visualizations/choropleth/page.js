@@ -4,6 +4,8 @@ import { useEffect, useState, useContext } from "react";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { MapContext } from "../../context/MapContext";
 import * as d3 from "d3";
+import { feature as topojsonFeature } from "topojson-client";
+
 import VisualizationMenu from "../../components/VisualizationMenu";
 import ResetZoomButton from "../../components/ResetZoomButton";
 import ToggleButton from "../../components/ToggleButton";
@@ -19,81 +21,73 @@ const defaultZoom = 4.3;
 
 export default function ChoroplethPage() {
   const { map, setMap } = useContext(MapContext);
-  const [countyFeatures, setCountyFeatures] = useState([]);
+  const [stateFeatures, setStateFeatures] = useState([]);
   const [incidentData, setIncidentData] = useState({});
   const [viewType, setViewType] = useState("fatal");
+  const [menuVisible, setMenuVisible] = useState(true);
 
-  // Load GeoJSON Data
   useEffect(() => {
-    fetch("/data/counties.json")
+    fetch("/data/states-10m.json")
       .then((res) => res.json())
-      .then((data) => {
-        if (data && data.features) {
-          setCountyFeatures(data.features);
+      .then((topoData) => {
+        if (topoData?.objects?.states) {
+          const statesGeo = topojsonFeature(topoData, topoData.objects.states);
+          setStateFeatures(statesGeo.features);
+        } else {
+          console.error("states-10m.json structure is not as expected.");
         }
       })
-      .catch((err) => console.error("Error fetching GeoJSON:", err));
+      .catch((err) => console.error("Error fetching states-10m.json:", err));
   }, []);
 
-  // Load and process CSV Data
   useEffect(() => {
-    d3.csv("/data/mass_shootings_geocoded_cleaned.csv").then((data) => {
-      const aggregatedData = data.reduce((acc, row) => {
-        const countyName = row["City Or County"].toLowerCase().trim();
-        acc[countyName] = acc[countyName] || { killed: 0, injured: 0 };
-        acc[countyName].killed += +row["Victims Killed"];
-        acc[countyName].injured += +row["Victims Injured"];
+    d3.csv("/data/mass_shootings_geocoded_cleaned.csv").then((rows) => {
+      const aggregated = rows.reduce((acc, row) => {
+        const state = row.State;
+        if (!acc[state]) acc[state] = { killed: 0, injured: 0 };
+        acc[state].killed += +row["Victims Killed"] || 0;
+        acc[state].injured += +row["Victims Injured"] || 0;
         return acc;
       }, {});
-      setIncidentData(aggregatedData);
+      setIncidentData(aggregated);
     });
   }, []);
 
-  // Process and display data
   useEffect(() => {
-    if (
-      !map ||
-      countyFeatures.length === 0 ||
-      Object.keys(incidentData).length === 0
-    )
-      return;
+    if (!map || !stateFeatures.length || !incidentData) return;
 
-    map.data.forEach((feature) => {
-      map.data.remove(feature);
-    });
-
+    map.data.forEach((feature) => map.data.remove(feature));
     map.data.addGeoJson({
       type: "FeatureCollection",
-      features: countyFeatures,
+      features: stateFeatures,
     });
 
-    // Apply correct styling for fatal/non-fatal cases
     map.data.setStyle((feature) => {
-      const countyName = feature.getProperty("NAME").toLowerCase().trim();
-      const data = incidentData[countyName] || { killed: 0, injured: 0 };
+      const stateName = feature.getProperty("name");
+      const data = incidentData[stateName] || { killed: 0, injured: 0 };
       const value = viewType === "fatal" ? data.killed : data.injured;
 
-      let colorScale;
-      if (viewType === "fatal") {
-        colorScale = d3
-          .scaleThreshold()
-          .domain([1, 50, 150])
-          .range(["#ffcccc", "#ff9999", "#ff6666"]);
-      } else {
-        colorScale = d3
-          .scaleThreshold()
-          .domain([1, 50, 150])
-          .range(["#cce5ff", "#99c2ff", "#005ce6"]);
-      }
+      const colorScale = d3
+        .scaleThreshold()
+        .domain(
+          viewType === "fatal"
+            ? [1, 20, 50, 100, 200, 500]
+            : [1, 50, 150, 300, 500, 1000]
+        )
+        .range(
+          viewType === "fatal"
+            ? ["#ffedea", "#ffcec5", "#ffad9f", "#ff6f5e", "#ff3f2e", "#ff1100"]
+            : ["#edf8fb", "#cce5ff", "#99c2ff", "#6699ff", "#3366ff", "#0033cc"]
+        );
 
       return {
-        fillColor: value > 0 ? colorScale(value) : "#d3d3d3", // Default gray if no data
-        fillOpacity: 0.7,
+        fillColor: colorScale(value),
+        fillOpacity: value > 0 ? 0.7 : 0.1,
         strokeColor: "#000",
         strokeWeight: 0.5,
       };
     });
-  }, [map, countyFeatures, incidentData, viewType]);
+  }, [map, stateFeatures, incidentData, viewType]);
 
   return (
     <div className="relative">
@@ -126,11 +120,16 @@ export default function ChoroplethPage() {
         />
       </LoadScript>
 
-      <Legend viewType={viewType} setViewType={setViewType} />
-
-      <VisualizationMenu isVisible={true} />
+      {menuVisible && <Legend viewType={viewType} setViewType={setViewType} />}
+      {menuVisible && (
+        <VisualizationMenu
+          redirectTo="/"
+          title="Geo Plot"
+          isVisible={menuVisible}
+        />
+      )}
       <ResetZoomButton />
-      <ToggleButton toggleVisibility={() => {}} />
+      <ToggleButton toggleVisibility={() => setMenuVisible(!menuVisible)} />
     </div>
   );
 }
