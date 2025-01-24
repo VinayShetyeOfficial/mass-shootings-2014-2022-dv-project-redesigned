@@ -3,6 +3,7 @@
 import RoomIcon from "@mui/icons-material/Room";
 
 export default function Legend({ viewType, setViewType }) {
+  // Updated to match the corrected intervals for each category
   const legendData = {
     fatal: [
       { color: "#ffedea", label: "Risk Level (1-20)" },
@@ -68,7 +69,7 @@ export default function Legend({ viewType, setViewType }) {
         {legendData[viewType].map((item, index) => (
           <div key={index} className="flex items-center">
             <div
-              className={`w-12 h-4 rounded-sm`}
+              className="w-12 h-4 rounded-sm"
               style={{ backgroundColor: item.color }}
             ></div>
             <span className="ml-3 text-sm">{item.label}</span>
