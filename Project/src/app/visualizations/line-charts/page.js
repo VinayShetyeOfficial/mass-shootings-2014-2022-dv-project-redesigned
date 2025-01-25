@@ -120,7 +120,7 @@ export default function LineChartsPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen p-6 bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400">
+    <div className="relative min-h-screen p-6 pb-32 bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400">
       {/* Page Title */}
       <h1 className="mb-8 text-4xl font-extrabold tracking-wider text-center">
         <div className="inline-flex items-center gap-4 p-4 rounded-lg justify-baseline ">
@@ -133,7 +133,7 @@ export default function LineChartsPage() {
       </h1>
 
       {/* Grid of small charts */}
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {stateData.map(({ state, data }) => (
           <div
             key={state}
@@ -148,7 +148,7 @@ export default function LineChartsPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={data}
-                  margin={{ top: 20, right: 10, left: -20, bottom: 20 }} // Adjusted left margin to shift the chart left
+                  margin={{ top: 20, right: 15, left: -30, bottom: 10 }} // Further adjusted left margin to shift chart left
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                   <XAxis
@@ -160,7 +160,14 @@ export default function LineChartsPage() {
                   <Tooltip content={<CustomTooltip />} />
                   <Legend
                     verticalAlign="top"
-                    wrapperStyle={{ color: "#333" }}
+                    align="center"
+                    iconSize={14}
+                    wrapperStyle={{
+                      margin: "auto", // Centers the legend horizontally
+                      width: "100%", // Ensures it takes full width to allow centering
+                      textAlign: "center", // Ensures text is centered
+                      paddingLeft: "75px",
+                    }}
                   />
                   <Line
                     type="monotone"
@@ -187,15 +194,8 @@ export default function LineChartsPage() {
         ))}
       </div>
 
-      {/* Fixed Visualization Menu (top-right) */}
-      <div className="fixed z-50 top-4 right-4">
-        <VisualizationMenu isVisible={menuVisible} />
-      </div>
-
-      {/* Fixed Toggle Button (bottom-left) */}
-      <div className="fixed z-50 bottom-4 left-4">
-        <ToggleButton toggleVisibility={toggleVisibility} />
-      </div>
+      <VisualizationMenu isVisible={menuVisible} />
+      <ToggleButton toggleVisibility={toggleVisibility} />
     </div>
   );
 }
