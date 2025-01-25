@@ -30,7 +30,7 @@ export default function StateSummary() {
       {/* Close button */}
       <button
         onClick={() => setSelectedStateName("")}
-        className="absolute flex items-center justify-center w-5 h-5 p-1.5 text-white transition-all duration-200 ease-in-out bg-red-500 rounded-full shadow-md top-2 right-2 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+        className="absolute flex items-center justify-center w-5 h-5 p-1.5 text-white transition-all duration-200 ease-in-out bg-red-500 rounded-full shadow-md top-2 right-3 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
         aria-label="Close Summary"
       >
         <ImCross className="text-xs font-bold" />
