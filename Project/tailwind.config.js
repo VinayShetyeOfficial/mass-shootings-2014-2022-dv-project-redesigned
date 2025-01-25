@@ -7,7 +7,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      zIndex: {
+        9999: "9999", // Custom z-index value
+      },
+    },
   },
   plugins: [],
 };
