@@ -1,14 +1,201 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import * as d3 from "d3";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
+import VisualizationMenu from "../../components/VisualizationMenu";
+import ToggleButton from "../../components/ToggleButton";
+import { FaMapLocationDot } from "react-icons/fa6";
+import { FaMapMarkerAlt } from "react-icons/fa";
+
+// Helper for consistent state name formatting
+function normalizeStateName(name) {
+  return (name || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+// Custom dark-themed tooltip with enhanced design
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="p-4 text-gray-300 bg-gray-900 border border-blue-400 shadow-2xl rounded-xl opacity-[0.88]">
+        <p className="flex items-center justify-center mb-2 text-lg font-bold text-white">
+          <span role="img" aria-label="calendar" className="mr-2">
+            📅
+          </span>
+          {label}
+        </p>
+        <div className="flex flex-col space-y-2 text-center">
+          <p className="font-semibold text-blue-400">
+            Injured:
+            <span className="ml-2 font-bold text-blue-300">
+              {payload[0]?.value}
+            </span>
+          </p>
+          <p className="font-semibold text-red-400">
+            Killed:
+            <span className="ml-2 font-bold text-red-300">
+              {payload[1]?.value}
+            </span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function LineChartsPage() {
+  const [menuVisible, setMenuVisible] = useState(true);
+  const [stateData, setStateData] = useState([]);
+
+  // Toggles the VisualizationMenu on/off
+  const toggleVisibility = () => {
+    setMenuVisible((prev) => !prev);
+  };
+
+  useEffect(() => {
+    async function loadCSV() {
+      try {
+        const rawData = await d3.csv("/data/mass_shootings_2014_2022.csv");
+
+        // Process data
+        rawData.forEach((row) => {
+          row.Year = new Date(row["Incident Date"]).getFullYear();
+          row.VictimsInjured = +row["Victims Injured"] || 0;
+          row.VictimsKilled = +row["Victims Killed"] || 0;
+          row.State = normalizeStateName(row.State);
+        });
+
+        // Group by state => year => sum injured/killed
+        const grouped = {};
+        rawData.forEach((d) => {
+          const { State, Year, VictimsInjured, VictimsKilled } = d;
+          if (!State) return;
+          if (!grouped[State]) grouped[State] = {};
+          if (!grouped[State][Year])
+            grouped[State][Year] = { injured: 0, killed: 0 };
+          grouped[State][Year].injured += VictimsInjured;
+          grouped[State][Year].killed += VictimsKilled;
+        });
+
+        // Build an array for each state containing sorted (by year) objects
+        const finalData = Object.keys(grouped)
+          .sort()
+          .map((st) => {
+            const yearsObj = grouped[st];
+            const yearsArr = Object.keys(yearsObj)
+              .sort((a, b) => +a - +b)
+              .map((yearStr) => ({
+                year: +yearStr,
+                injured: yearsObj[yearStr].injured,
+                killed: yearsObj[yearStr].killed,
+              }));
+
+            return {
+              state: st,
+              data: yearsArr,
+            };
+          });
+
+        setStateData(finalData);
+      } catch (error) {
+        console.error("Error loading CSV:", error);
+      }
+    }
+
+    loadCSV();
+  }, []);
+
   return (
-    <div className="p-10 text-center">
-      <h1 className="text-3xl font-bold">Line Charts</h1>
-      <p>Line Charts visualization will be here.</p>
-      <a
-        href="/"
-        className="inline-block px-4 py-2 mt-5 text-white bg-blue-500 rounded"
-      >
-        Back to Home
-      </a>
+    <div className="relative min-h-screen p-6 bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400">
+      {/* Page Title */}
+      <h1 className="mb-8 text-4xl font-extrabold tracking-wider text-center">
+        <div className="inline-flex items-center gap-4 p-4 rounded-lg justify-baseline ">
+          <FaMapLocationDot className="text-5xl text-blue-800" />
+          <span className="text-3xl font-bold tracking-widest text-gray-800 drop-shadow-md">
+            Victims Analysis Over the Years{" "}
+            <span className="text-blue-800">[2014 - 2022]</span>
+          </span>
+        </div>
+      </h1>
+
+      {/* Grid of small charts */}
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        {stateData.map(({ state, data }) => (
+          <div
+            key={state}
+            className="p-5 transition-all duration-300 transform border border-gray-400 shadow-lg bg-gradient-to-br from-white via-blue-100 to-gray-100 rounded-3xl hover:shadow-2xl hover:scale-105"
+          >
+            {/* Chart Title */}
+            <h2 className="flex items-center justify-center mb-3 font-extrabold tracking-wide text-transparent text-gray-900 uppercase text-md bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text">
+              <FaMapMarkerAlt className="mr-2 text-blue-600 text-md" />
+              {state}
+            </h2>
+            <div className="w-full h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={data}
+                  margin={{ top: 20, right: 10, left: -20, bottom: 20 }} // Adjusted left margin to shift the chart left
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+                  <XAxis
+                    dataKey="year"
+                    tick={{ fill: "#555", fontSize: 12 }}
+                    stroke="#bbb"
+                  />
+                  <YAxis tick={{ fill: "#555", fontSize: 12 }} stroke="#bbb" />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend
+                    verticalAlign="top"
+                    wrapperStyle={{ color: "#333" }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="injured"
+                    name="Injured"
+                    stroke="#1E90FF"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="killed"
+                    name="Killed"
+                    stroke="#FF4136"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Fixed Visualization Menu (top-right) */}
+      <div className="fixed z-50 top-4 right-4">
+        <VisualizationMenu isVisible={menuVisible} />
+      </div>
+
+      {/* Fixed Toggle Button (bottom-left) */}
+      <div className="fixed z-50 bottom-4 left-4">
+        <ToggleButton toggleVisibility={toggleVisibility} />
+      </div>
     </div>
   );
 }
