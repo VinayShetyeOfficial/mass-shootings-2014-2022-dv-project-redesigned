@@ -25,7 +25,7 @@ export default function Legend({ viewType, setViewType }) {
 
   return (
     <div className="absolute max-h-full p-4 text-white bg-gray-900 rounded-lg shadow-lg top-2 left-2 bg-opacity-90">
-      <h2 className="mb-3 text-2xl font-bold text-center">Legend</h2>
+      <h2 className="mb-3 text-2xl font-bold text-center">Explore</h2>
 
       <div className="flex mb-3 space-x-2">
         <button
