@@ -60,7 +60,7 @@ export default function ExploreMenu({ isVisible }) {
 
   return (
     <div
-      className={`absolute max-h-full p-4 text-white bg-gray-900 rounded-lg top-2 left-2 bg-opacity-90 transition-opacity duration-500 ${
+      className={`fixed max-h-full p-4 text-white bg-gray-900 rounded-lg top-2 left-2 bg-opacity-90 transition-opacity duration-500 ${
         isVisible ? "opacity-100 visible" : "opacity-0 invisible"
       }`}
     >
