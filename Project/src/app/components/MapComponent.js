@@ -1,7 +1,9 @@
+// src/app/components/MapComponent.js
+
 "use client";
 
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useCallback } from "react";
 import { MapContext } from "../context/MapContext";
 import { processCSVData } from "../utils/processData";
 
@@ -21,6 +23,9 @@ export default function MapComponent() {
     setIncidentMarkers,
     selectedYear,
     selectedCategory,
+    currentZoom,
+    setCurrentZoom,
+    setIsMapLoaded, // Destructure setIsMapLoaded
   } = useContext(MapContext);
 
   useEffect(() => {
@@ -34,9 +39,32 @@ export default function MapComponent() {
         );
         console.log("Filtered incidents:", incidents);
         setIncidentMarkers(incidents);
+
+        // Introduce a delay before setting isMapLoaded to true
+        setTimeout(() => {
+          setIsMapLoaded(true);
+        }, 5000); // 5-second delay for testing
       })
       .catch((error) => console.error("Error loading CSV:", error));
-  }, [selectedYear, selectedCategory, setIncidentMarkers]);
+  }, [selectedYear, selectedCategory, setIncidentMarkers, setIsMapLoaded]);
+
+  // Callback to handle map load
+  const handleMapLoad = useCallback(
+    (mapInstance) => {
+      setMap(mapInstance);
+      setCurrentZoom(mapInstance.getZoom());
+
+      // Optionally, you can set isMapLoaded here instead of in the useEffect above
+      // setIsMapLoaded(true);
+
+      // Add event listener for zoom changes
+      mapInstance.addListener("zoom_changed", () => {
+        const newZoom = mapInstance.getZoom();
+        setCurrentZoom(newZoom);
+      });
+    },
+    [setMap, setCurrentZoom, setIsMapLoaded]
+  );
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
@@ -44,7 +72,7 @@ export default function MapComponent() {
         mapContainerStyle={mapContainerStyle}
         center={defaultCenter}
         zoom={defaultZoom}
-        onLoad={(mapInstance) => setMap(mapInstance)}
+        onLoad={handleMapLoad}
         options={{
           mapTypeControl: false,
           fullscreenControl: false,
