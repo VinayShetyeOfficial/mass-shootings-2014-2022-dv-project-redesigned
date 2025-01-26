@@ -2,13 +2,17 @@
 import { useContext } from "react";
 import { MapContext } from "../context/MapContext";
 
-export default function ResetZoomButton() {
+export default function ResetZoomButton({ resetNetworkView }) {
   const { map } = useContext(MapContext);
 
   const handleResetZoom = () => {
     if (map) {
+      // Reset for map visualization
       map.setZoom(4.8);
       map.setCenter({ lat: 38.5, lng: -100.55 });
+    } else if (resetNetworkView) {
+      // Reset for network visualization
+      resetNetworkView();
     }
   };
 
