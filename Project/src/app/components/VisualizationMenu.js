@@ -10,8 +10,8 @@ export default function VisualizationMenu({ isVisible }) {
   // Define the available pages with the correct order
   const pages = [
     { name: "Choropleth", path: "/visualizations/choropleth" },
-    { name: "Network (Fatal)", path: "/visualizations/network-fatal" },
-    { name: "Network (Non-Fatal)", path: "/visualizations/network-nonfatal" },
+    { name: "Network", path: "/visualizations/network" },
+    // { name: "Network (Non-Fatal)", path: "/visualizations/network" },
     { name: "Line Charts", path: "/visualizations/line-charts" },
     { name: "Heatmap", path: "/visualizations/heatmap" },
   ];
