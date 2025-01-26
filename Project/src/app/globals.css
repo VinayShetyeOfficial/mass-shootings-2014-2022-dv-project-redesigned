@@ -1,29 +1,58 @@
+/* src/app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Body Styles */
 body {
   font-family: Arial, sans-serif;
-  /* We'll rely on the Tailwind gradient classes for the page background,
-     so leaving body background neutral or commented out here. */
+  /* Optional: Set a default background */
   /* background-color: #f4f4f4; */
 }
 
-/* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
+#__next {
+  display: contents !important; /* Prevent default loading message */
 }
-.custom-scrollbar::-webkit-scrollbar-track {
+
+/* ===========================
+   Global Custom Scrollbar Styles
+   =========================== */
+
+/* For WebKit Browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* For horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
   background: #2d2d2d;
   border-radius: 10px;
 }
-.custom-scrollbar::-webkit-scrollbar-thumb {
+
+::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
 }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+
+::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* Options: auto, thin */
+  scrollbar-color: #888 #2d2d2d; /* thumb color, track color */
+}
+
+/* Optional: Apply smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ===========================
+   Additional Global Styles
+   =========================== */
 
 /* Map container styling */
 .map-container {
@@ -32,7 +61,7 @@ body {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Button transitions */
+/* Button transitions (if needed globally) */
 /* button {
   transition: all 0.3s ease;
 }
