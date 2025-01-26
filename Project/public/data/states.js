@@ -1,10 +1,12 @@
 export const states = {
+  AK: "Alaska",
   AL: "Alabama",
   AZ: "Arizona",
   AR: "Arkansas",
   CA: "California",
   CO: "Colorado",
   CT: "Connecticut",
+  DC: "District of Columbia",
   DE: "Delaware",
   FL: "Florida",
   GA: "Georgia",
