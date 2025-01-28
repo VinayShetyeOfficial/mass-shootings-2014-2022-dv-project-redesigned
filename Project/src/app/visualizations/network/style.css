@@ -1,0 +1,107 @@
+/* src/app/visualizations/network/style.css */
+
+/* Tooltip Styling */
+.tooltip {
+  position: absolute;
+  z-index: 50;
+  padding: 8px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  max-width: 200px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+/* Legend Color Boxes */
+.legend-color {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 5px;
+  border: 1px solid #000;
+}
+
+/* Default Zoom Button Styling */
+.def-zoom-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #ff5722;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.def-zoom-btn:hover {
+  background-color: #e64a19;
+}
+
+/* Toggle Legend Button Styling */
+.toggle-legend-btn {
+  /* Similar styling as def-zoom-btn or customized as needed */
+  position: absolute;
+  bottom: 80px; /* Adjust based on layout */
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.toggle-legend-btn:hover {
+  background-color: #43a047;
+}
+
+/* Controls Container Styling */
+.controls-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+/* SVG Container Styling */
+.svg-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Legend Table Styling */
+.legend-table table {
+  border-collapse: collapse;
+}
+
+.legend-table td {
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.legend-table .legend-color {
+  margin-right: 5px;
+}
