@@ -73,7 +73,7 @@ export default function HeatMapPage() {
   return (
     <div className="relative flex flex-col items-center min-h-screen p-6 bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400">
       {/* Page Title / Heading */}
-      <h1 className="mb-8 text-4xl font-extrabold tracking-wider text-center">
+      <h1 className="text-4xl font-extrabold tracking-wider text-center">
         <div className="inline-flex items-center gap-4 p-4 rounded-lg justify-baseline ">
           <FaMapMarkerAlt className="text-4xl text-blue-800" />
           <span className="text-3xl font-bold tracking-widest text-gray-800 drop-shadow-md">
