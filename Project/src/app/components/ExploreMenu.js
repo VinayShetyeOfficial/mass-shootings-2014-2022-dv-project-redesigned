@@ -125,7 +125,7 @@ export default function ExploreMenu({ isVisible }) {
         />
         <SearchIcon className="absolute text-white right-3 top-3" />
         {suggestions.length > 0 && (
-          <ul className="w-full mt-2 overflow-y-auto bg-gray-700 rounded shadow-lg max-h-[360px]">
+          <ul className="w-full mt-2 overflow-y-auto bg-gray-700 rounded shadow-lg max-h-[360px] custom-scrollbar">
             {suggestions.map(([abbr, fullName]) => (
               <li
                 key={abbr}
