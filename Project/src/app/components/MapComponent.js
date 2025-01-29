@@ -17,15 +17,13 @@ const defaultZoom = 4.3;
 
 export default function MapComponent() {
   const {
-    map,
     setMap,
     incidentMarkers,
     setIncidentMarkers,
     selectedYear,
     selectedCategory,
-    currentZoom,
     setCurrentZoom,
-    setIsMapLoaded, // Destructure setIsMapLoaded
+    setIsMapLoaded,
   } = useContext(MapContext);
 
   useEffect(() => {
@@ -40,10 +38,11 @@ export default function MapComponent() {
         console.log("Filtered incidents:", incidents);
         setIncidentMarkers(incidents);
 
-        // Introduce a delay before setting isMapLoaded to true
+        // Random timeout between 1-7 seconds (1000-7000ms)
+        const randomTimeout = Math.floor(Math.random() * 6000) + 1000;
         setTimeout(() => {
           setIsMapLoaded(true);
-        }, 5000); // 5-second delay for testing
+        }, randomTimeout);
       })
       .catch((error) => console.error("Error loading CSV:", error));
   }, [selectedYear, selectedCategory, setIncidentMarkers, setIsMapLoaded]);

@@ -3,24 +3,254 @@
 import { useState } from "react";
 import RoomIcon from "@mui/icons-material/Room";
 import { states } from "../../../../public/data/states";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-export default function Legend({ viewType, setViewType, applySettings }) {
+export default function Legend({
+  viewType,
+  setViewType,
+  applySettings,
+  onDateRangeChange,
+}) {
   const [activeTab, setActiveTab] = useState("legend");
+  const minSelectableDate = new Date(Date.UTC(2014, 0, 1)); // Jan 1, 2014
+  const maxSelectableDate = new Date(Date.UTC(2022, 11, 31)); // Dec 31, 2022
+
+  const [startDate, setStartDate] = useState(() => {
+    return new Date(Date.UTC(2014, 0, 1, 0, 0, 0, 0));
+  });
+
+  const [endDate, setEndDate] = useState(() => {
+    return new Date(Date.UTC(2022, 11, 31, 23, 59, 59, 999));
+  });
+
+  // Initialize temp dates with the same values
+  const [tempStartDate, setTempStartDate] = useState(() => {
+    return new Date(Date.UTC(2014, 0, 1, 0, 0, 0, 0));
+  });
+
+  const [tempEndDate, setTempEndDate] = useState(() => {
+    return new Date(Date.UTC(2022, 11, 31, 23, 59, 59, 999));
+  });
+
+  const handleDateChange = (dates) => {
+    const [start, end] = dates;
+
+    if (start && end) {
+      // Create UTC dates
+      const utcStart = new Date(
+        Date.UTC(
+          start.getFullYear(),
+          start.getMonth(),
+          start.getDate(),
+          0,
+          0,
+          0,
+          0
+        )
+      );
+
+      const utcEnd = new Date(
+        Date.UTC(
+          end.getFullYear(),
+          end.getMonth(),
+          end.getDate(),
+          23,
+          59,
+          59,
+          999
+        )
+      );
+
+      setStartDate(utcStart);
+      setEndDate(utcEnd);
+      onDateRangeChange(utcStart, utcEnd);
+    } else {
+      setStartDate(start);
+      setEndDate(end);
+    }
+  };
+
+  const handleApplyFilter = () => {
+    setStartDate(tempStartDate);
+    setEndDate(tempEndDate);
+    onDateRangeChange(tempStartDate, tempEndDate);
+  };
 
   const legendData = {
     fatal: [
-      { color: "#ffedea", label: "Victims Killed (1-5)" },
-      { color: "#ffcec5", label: "Victims Killed (6-10)" },
-      { color: "#ffad9f", label: "Victims Killed (11-20)" },
-      { color: "#ff6f5e", label: "Victims Killed (21-50)" },
-      { color: "#ff1100", label: "Victims Killed (51+)" },
+      {
+        icon: (
+          <svg width="45" height="45" className="inline-block">
+            <circle
+              cx="22.5"
+              cy="22.5"
+              r="22.5"
+              fill="black"
+              stroke="white"
+              strokeWidth="3"
+            />
+            <circle
+              cx="22.5"
+              cy="22.5"
+              r="18"
+              fill="black"
+              stroke="white"
+              strokeWidth="2"
+            />
+            <text
+              x="22.5"
+              y="28"
+              fontSize="12"
+              fill="#00ffff"
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              St
+            </text>
+          </svg>
+        ),
+        label: "State Node",
+        sublabel: "Size ∝ Total Victims",
+      },
+      {
+        icon: (
+          <svg width="24" height="24" className="inline-block">
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              fill="black"
+              stroke="white"
+              strokeWidth="1.5"
+            />
+            <circle cx="12" cy="12" r="8" fill="#EF4444" />
+          </svg>
+        ),
+        label: "Local Node",
+        sublabel: "Size ∝ Local Impact",
+      },
+      {
+        icon: (
+          <svg width="50" height="30" className="inline-block">
+            <rect x="0" y="0" width="50" height="30" fill="#111827" />
+            <line
+              x1="5"
+              y1="15"
+              x2="45"
+              y2="15"
+              stroke="white"
+              strokeWidth="3"
+            />
+          </svg>
+        ),
+        label: "Interstate Link",
+        sublabel: "Width ∝ Correlation",
+      },
+      {
+        icon: (
+          <svg width="50" height="30" className="inline-block">
+            <rect x="0" y="0" width="50" height="30" fill="#111827" />
+            <line
+              x1="5"
+              y1="15"
+              x2="45"
+              y2="15"
+              stroke="white"
+              strokeWidth="1.5"
+            />
+          </svg>
+        ),
+        label: "Local Link",
+        sublabel: "Jurisdiction",
+      },
     ],
     injured: [
-      { color: "#edf8fb", label: "Victims Injured (1-5)" },
-      { color: "#cce5ff", label: "Victims Injured (6-10)" },
-      { color: "#99c2ff", label: "Victims Injured (11-20)" },
-      { color: "#6699ff", label: "Victims Injured (21-50)" },
-      { color: "#0033cc", label: "Victims Injured (51+)" },
+      {
+        icon: (
+          <svg width="45" height="45" className="inline-block">
+            <circle
+              cx="22.5"
+              cy="22.5"
+              r="22.5"
+              fill="black"
+              stroke="white"
+              strokeWidth="3"
+            />
+            <circle
+              cx="22.5"
+              cy="22.5"
+              r="18"
+              fill="black"
+              stroke="white"
+              strokeWidth="2"
+            />
+            <text
+              x="22.5"
+              y="28"
+              fontSize="12"
+              fill="#00ffff"
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              St
+            </text>
+          </svg>
+        ),
+        label: "State Node",
+        sublabel: "Size ∝ Total Victims",
+      },
+      {
+        icon: (
+          <svg width="24" height="24" className="inline-block">
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              fill="black"
+              stroke="white"
+              strokeWidth="1.5"
+            />
+            <circle cx="12" cy="12" r="8" fill="#3B82F6" />
+          </svg>
+        ),
+        label: "Local Node",
+        sublabel: "Size ∝ Local Impact",
+      },
+      {
+        icon: (
+          <svg width="50" height="30" className="inline-block">
+            <rect x="0" y="0" width="50" height="30" fill="#111827" />
+            <line
+              x1="5"
+              y1="15"
+              x2="45"
+              y2="15"
+              stroke="white"
+              strokeWidth="3"
+            />
+          </svg>
+        ),
+        label: "Interstate Link",
+        sublabel: "Width ∝ Correlation",
+      },
+      {
+        icon: (
+          <svg width="50" height="30" className="inline-block">
+            <rect x="0" y="0" width="50" height="30" fill="#111827" />
+            <line
+              x1="5"
+              y1="15"
+              x2="45"
+              y2="15"
+              stroke="white"
+              strokeWidth="1.5"
+            />
+          </svg>
+        ),
+        label: "Local Link",
+        sublabel: "Jurisdiction",
+      },
     ],
   };
 
@@ -89,14 +319,24 @@ export default function Legend({ viewType, setViewType, applySettings }) {
           <div className="p-3 mb-4 text-lg font-semibold text-center bg-gray-700 rounded">
             Legend Details
           </div>
-          <div className="space-y-3 text-base text-gray-200">
+          <div className="p-4 space-y-4 text-base bg-white rounded-lg">
             {legendData[viewType].map((item, index) => (
-              <div key={index} className="flex items-center">
-                <div
-                  className="w-12 h-4 rounded-sm"
-                  style={{ backgroundColor: item.color }}
-                ></div>
-                <span className="ml-3">{item.label}</span>
+              <div key={index} className="flex items-center space-x-3">
+                <span className="flex items-center justify-center w-16 text-center">
+                  {typeof item.icon === "string" ? (
+                    <span className="font-mono text-xl text-gray-800">
+                      {item.icon}
+                    </span>
+                  ) : (
+                    item.icon
+                  )}
+                </span>
+                <div className="flex flex-col">
+                  <span className="font-semibold text-gray-900">
+                    {item.label}
+                  </span>
+                  <span className="text-sm text-gray-700">{item.sublabel}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -105,96 +345,65 @@ export default function Legend({ viewType, setViewType, applySettings }) {
 
       {/* Filters Tab */}
       {activeTab === "filters" && (
-        <div className="space-y-4">
-          {/* Date Range with two columns */}
-          <div className="flex flex-col">
-            {/* <label className="mb-1 text-sm font-semibold text-gray-300">
-              Date Range:
-            </label> */}
-            <div className="grid grid-cols-2 gap-2">
-              <div className="flex flex-col">
-                <label className="mb-1 text-sm font-semibold text-gray-300">
-                  From
+        <div>
+          <div className="p-3 mb-4 text-lg font-semibold text-center bg-gray-700 rounded">
+            Date Range Filter
+          </div>
+          <div className="p-4 space-y-4 bg-white rounded-lg">
+            <div className="flex flex-col space-y-4">
+              {/* From Date */}
+              <div className="flex flex-col space-y-1">
+                <label className="text-sm font-bold text-gray-800">
+                  From Date:
                 </label>
-                <input
-                  type="date"
-                  className="w-full h-10 p-2 text-sm text-white placeholder-gray-400 bg-gray-700 border border-gray-600 rounded outline-none focus:bg-gray-600"
+                <DatePicker
+                  selected={tempStartDate}
+                  onChange={(date) => {
+                    setTempStartDate(date);
+                  }}
+                  className="w-full p-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  dateFormat="MM/dd/yyyy"
+                  minDate={minSelectableDate}
+                  maxDate={tempEndDate}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={9}
+                  placeholderText="Select start date"
+                  openToDate={minSelectableDate}
                 />
               </div>
-              <div className="flex flex-col">
-                <label className="mb-1 text-sm font-semibold text-gray-300">
-                  To
+
+              {/* To Date */}
+              <div className="flex flex-col space-y-1">
+                <label className="text-sm font-bold text-gray-800">
+                  To Date:
                 </label>
-                <input
-                  type="date"
-                  className="w-full h-10 p-2 text-sm text-white placeholder-gray-400 bg-gray-700 border border-gray-600 rounded outline-none focus:bg-gray-600"
+                <DatePicker
+                  selected={tempEndDate}
+                  onChange={(date) => {
+                    setTempEndDate(date);
+                  }}
+                  className="w-full p-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  dateFormat="MM/dd/yyyy"
+                  minDate={tempStartDate}
+                  maxDate={maxSelectableDate}
+                  showYearDropdown
+                  scrollableYearDropdown
+                  yearDropdownItemNumber={9}
+                  placeholderText="Select end date"
+                  openToDate={maxSelectableDate}
                 />
               </div>
+
+              {/* Apply Button */}
+              <button
+                onClick={handleApplyFilter}
+                className="w-full px-4 py-2 font-semibold text-white transition-colors duration-200 bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-0 active:ring-0"
+              >
+                Apply
+              </button>
             </div>
           </div>
-
-          {/* State Dropdown */}
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-semibold text-gray-300">
-              State:
-            </label>
-            <select className="w-full h-10 p-2 text-sm text-white bg-gray-700 border border-gray-600 rounded outline-none focus:bg-gray-600 custom-scrollbar">
-              <option value="">All States</option>
-              {Object.entries(states).map(([abbr, name]) => (
-                <option key={abbr} value={abbr} className="hover:bg-gray-600">
-                  {name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* City Input */}
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-semibold text-gray-300">
-              City:
-            </label>
-            <input
-              type="text"
-              className="w-full h-10 p-2 text-sm text-white placeholder-gray-400 bg-gray-700 border border-gray-600 rounded outline-none focus:bg-gray-600"
-              placeholder="Enter city name"
-            />
-          </div>
-
-          {/* Sliders */}
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-semibold text-gray-300">
-              Link Strength:
-            </label>
-            <input
-              type="range"
-              className="w-full h-1 bg-gray-600 rounded-lg outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-semibold text-gray-300">
-              Collide Force:
-            </label>
-            <input
-              type="range"
-              className="w-full h-1 bg-gray-600 rounded-lg outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-semibold text-gray-300">
-              Charge Force:
-            </label>
-            <input
-              type="range"
-              className="w-full h-1 bg-gray-600 rounded-lg outline-none"
-            />
-          </div>
-
-          {/* Apply Filters Button */}
-          <button className="w-full px-6 py-3 text-sm font-semibold text-white bg-red-600 rounded outline-none hover:bg-red-700">
-            Apply Filters
-          </button>
         </div>
       )}
     </div>
