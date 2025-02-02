@@ -12,30 +12,55 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 // Dynamically import Plotly to prevent SSR issues
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
+/**
+ * Heatmap visualization component for mass shooting incidents.
+ * Displays temporal and geographical distribution of incidents.
+ *
+ * Features:
+ * - Interactive heatmap using Plotly
+ * - Custom color scaling
+ * - Hover interactions
+ * - Responsive layout
+ */
+
+// Add these CSS classes at the top of your component
+const styles = {
+  container: `
+    @media (min-width: 1536px) { /* 2xl screens */
+      margin: { l: 250, r: 250, t: 80, b: 100 }
+    }
+    @media (min-width: 1280px) and (max-width: 1535px) { /* xl screens */
+      margin: { l: 200, r: 200, t: 80, b: 100 }
+    }
+    @media (min-width: 1024px) and (max-width: 1279px) { /* lg screens */
+      margin: { l: 150, r: 150, t: 80, b: 100 }
+    }
+    @media (min-width: 768px) and (max-width: 1023px) { /* md screens */
+      margin: { l: 100, r: 100, t: 80, b: 100 }
+    }
+  `,
+};
+
 export default function HeatMapPage() {
   const [menuVisible, setMenuVisible] = useState(true);
-  const [heatmapData, setHeatmapData] = useState({
-    z: [],
-    x: [],
-    y: [],
-  });
+  const [heatmapData, setHeatmapData] = useState({ x: [], y: [], z: [] });
+  const [windowWidth, setWindowWidth] = useState(0); // Initialize with 0
 
   // Toggles the VisualizationMenu on/off
   const toggleVisibility = () => {
     setMenuVisible((prev) => !prev);
   };
 
+  // Process CSV data for heatmap visualization
   useEffect(() => {
-    async function loadCSV() {
-      try {
-        const rawData = await d3.csv("/data/mass_shootings_2014_2022.csv");
-
+    d3.csv("/data/mass_shootings_geocoded_cleaned.csv")
+      .then((data) => {
         const years = new Set();
         const states = new Set();
         const dataMap = {};
 
         // Process data
-        rawData.forEach((row) => {
+        data.forEach((row) => {
           const year = new Date(row["Incident Date"]).getFullYear();
           const state = row["State"];
           const victims = +row["Victims Killed"] + +row["Victims Injured"];
@@ -62,16 +87,38 @@ export default function HeatMapPage() {
           y: sortedStates,
           z: zData,
         });
-      } catch (error) {
+      })
+      .catch((error) => {
         console.error("Error loading CSV:", error);
-      }
-    }
-
-    loadCSV();
+      });
   }, []);
 
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window !== "undefined") {
+      // Update width on client side
+      setWindowWidth(window.innerWidth);
+
+      // Add resize listener
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+
+      // Cleanup
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  // Configure heatmap color scale
+  const colorscale = [
+    [0, "#FFD700"], // Bright Yellow for non-fatal
+    [0.25, "#FFA500"], // Orange for moderate counts
+    [0.5, "#FF4500"], // Orange-Red for higher counts
+    [0.75, "#DC143C"], // Crimson red for severe counts
+    [1, "#8B0000"], // Dark Red for fatal cases
+  ];
+
   return (
-    <div className="relative flex flex-col items-center min-h-screen p-6 bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400">
+    <div className="relative min-h-screen bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400">
       {/* Page Title / Heading */}
       <h1 className="text-4xl font-extrabold tracking-wider text-center">
         <div className="inline-flex items-center gap-4 p-4 rounded-lg justify-baseline ">
@@ -95,18 +142,12 @@ export default function HeatMapPage() {
                   x: heatmapData.x,
                   y: heatmapData.y,
                   type: "heatmap",
-                  colorscale: [
-                    [0, "#FFD700"], // Bright Yellow for non-fatal (injured)
-                    [0.25, "#FFA500"], // Orange for moderate counts
-                    [0.5, "#FF4500"], // Orange-Red for higher counts
-                    [0.75, "#DC143C"], // Crimson red for severe counts
-                    [1, "#8B0000"], // Dark Red for fatal cases
-                  ],
+                  colorscale: colorscale,
                   hoverongaps: false,
                   zsmooth: false,
                   showscale: true,
                   text: heatmapData.z.map((row) =>
-                    row.map((val) => (val > 0 ? `<b>${val}</b>` : ""))
+                    row.map((val) => `<b>${val}</b>`)
                   ),
                   texttemplate: "%{text}",
                   textfont: {
@@ -202,13 +243,19 @@ export default function HeatMapPage() {
                   },
                 ],
 
-                margin: { l: 250, r: 250, t: 80, b: 100 },
+                margin: {
+                  l: windowWidth >= 1920 ? 400 : windowWidth === 0 ? 300 : 300, // Default to 300 when width is 0
+                  r: windowWidth >= 1920 ? 400 : windowWidth === 0 ? 0 : 0,
+                  t: 80,
+                  b: 100,
+                },
                 paper_bgcolor: "rgba(0,0,0,0)",
                 plot_bgcolor: "rgba(0,0,0,0)",
                 height: 2000,
-                width: 1800,
+                width:
+                  windowWidth >= 1920 ? 1800 : windowWidth === 0 ? 1280 : 1280, // Default to 1280 when width is 0
                 dragmode: false,
-                hovermode: "closest", // Maintain hover interactions
+                hovermode: "closest",
               }}
               config={{
                 responsive: true,

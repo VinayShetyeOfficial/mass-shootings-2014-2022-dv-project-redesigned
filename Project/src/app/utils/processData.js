@@ -1,7 +1,23 @@
+/**
+ * Utility functions for processing mass shooting incident data.
+ * Handles CSV parsing, filtering, and data transformation.
+ *
+ * Functions:
+ * - processCSVData: Processes raw CSV data with filters
+ */
+
 "use client";
 
 import Papa from "papaparse";
 
+/**
+ * Processes CSV data and applies filters based on year and category.
+ *
+ * @param {string} csvText - Raw CSV data as string
+ * @param {string} selectedYear - Year filter (default: "All")
+ * @param {string} selectedCategory - Category filter (default: "All")
+ * @returns {Promise<Array>} Array of processed incident data
+ */
 export async function processCSVData(
   csvText,
   selectedYear = "All",
@@ -12,8 +28,10 @@ export async function processCSVData(
       header: true,
       skipEmptyLines: true,
       complete: (result) => {
+        // Filter and transform data
         const processedData = result.data
           .filter((row) => {
+            // Validate required fields
             if (
               !row["Incident ID"] ||
               !row["Latitude"] ||
@@ -23,6 +41,7 @@ export async function processCSVData(
               return false;
             }
 
+            // Apply year filter
             const yearStr = row["Incident Date"].split(", ")[1]?.trim();
             const incidentYear = parseInt(yearStr, 10);
 
@@ -33,6 +52,7 @@ export async function processCSVData(
               return false;
             }
 
+            // Apply category filter (Fatal/Nonfatal)
             const killedNum = parseInt(row["Victims Killed"] || "0", 10);
             const injuredNum = parseInt(row["Victims Injured"] || "0", 10);
             const isFatal = killedNum > 0;
@@ -44,22 +64,17 @@ export async function processCSVData(
             }
             return true;
           })
-          .map((row) => {
-            const killedNum = parseInt(row["Victims Killed"] || "0", 10);
-            const injuredNum = parseInt(row["Victims Injured"] || "0", 10);
-
-            return {
-              id: row["Incident ID"],
-              state: row["State"] || "Unknown",
-              fatal: killedNum > 0,
-              killed: killedNum, // NEW
-              injured: injuredNum, // NEW
-              position: {
-                lat: parseFloat(row["Latitude"]),
-                lng: parseFloat(row["Longitude"]),
-              },
-            };
-          });
+          .map((row) => ({
+            id: row["Incident ID"],
+            state: row["State"] || "Unknown",
+            fatal: parseInt(row["Victims Killed"] || "0", 10) > 0,
+            killed: parseInt(row["Victims Killed"] || "0", 10),
+            injured: parseInt(row["Victims Injured"] || "0", 10),
+            position: {
+              lat: parseFloat(row["Latitude"]),
+              lng: parseFloat(row["Longitude"]),
+            },
+          }));
 
         resolve(processedData);
       },

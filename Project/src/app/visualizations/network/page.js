@@ -20,6 +20,16 @@ const STATE_ABBR = Object.entries(states).reduce((acc, [abbr, fullName]) => {
   return acc;
 }, {});
 
+/**
+ * Network visualization showing relationships between incidents.
+ * Displays connections between states and incident patterns.
+ *
+ * Features:
+ * - Force-directed graph
+ * - Interactive nodes
+ * - Dynamic link generation
+ * - Zoom and pan controls
+ */
 export default function NetworkPage() {
   const svgRef = useRef();
   const [menuVisible, setMenuVisible] = useState(true);

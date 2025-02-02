@@ -9,14 +9,30 @@ import ResetZoomButton from "../../components/ResetZoomButton";
 import ToggleButton from "../../components/ToggleButton";
 import Legend from "./Legend";
 
+/**
+ * Choropleth map visualization of incident distribution.
+ * Shows geographical patterns using color-coded states.
+ *
+ * Features:
+ * - State-level data aggregation
+ * - Custom color scales
+ * - Interactive tooltips
+ * - Toggle between metrics
+ */
+
+// Map container style configuration
 const mapContainerStyle = {
   width: "100vw",
   height: "100vh",
 };
 
+// Default center coordinates for USA
 const defaultCenter = { lat: 38.5, lng: -100.5 };
+
+// Initial zoom level for map view
 const defaultZoom = 4.3;
 
+// Normalize state names for consistent comparison
 const normalizeStateName = (name) => {
   if (!name) return "";
   return name
@@ -35,6 +51,7 @@ export default function ChoroplethPage() {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
+  // Fetch and process state boundary data
   useEffect(() => {
     fetch("/data/states-10m.json")
       .then((res) => res.json())
@@ -53,6 +70,7 @@ export default function ChoroplethPage() {
       .catch((err) => console.error("Error fetching states-10m.json:", err));
   }, []);
 
+  // Aggregate incident data by state
   useEffect(() => {
     d3.csv("/data/mass_shootings_geocoded_cleaned.csv").then((rows) => {
       const aggregated = rows.reduce((acc, row) => {

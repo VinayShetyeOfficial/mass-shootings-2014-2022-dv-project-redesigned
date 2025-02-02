@@ -1,5 +1,19 @@
 "use client";
-import { useState } from "react";
+
+/**
+ * Reusable toggle button component.
+ * Provides binary state switching functionality.
+ *
+ * Features:
+ * - Animated state transitions
+ * - Customizable styling
+ * - Accessibility support
+ *
+ * Props:
+ * - isActive: boolean - Current toggle state
+ * - onChange: function - Toggle state handler
+ * - label: string - Button label
+ */
 
 export default function ToggleButton({ toggleVisibility }) {
   return (

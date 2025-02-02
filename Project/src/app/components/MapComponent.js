@@ -7,12 +7,27 @@ import { useEffect, useContext, useCallback } from "react";
 import { MapContext } from "../context/MapContext";
 import { processCSVData } from "../utils/processData";
 
+/**
+ * Core map component using Google Maps API.
+ * Handles map initialization, marker rendering, and data loading.
+ *
+ * Features:
+ * - Dynamic marker plotting
+ * - Zoom restrictions
+ * - Custom styling
+ * - Data filtering
+ */
+
+// Map container dimensions
 const mapContainerStyle = {
   width: "100vw",
   height: "100vh",
 };
 
+// Default map center coordinates (USA)
 const defaultCenter = { lat: 38.5, lng: -100.5 };
+
+// Initial zoom level for map
 const defaultZoom = 4.3;
 
 export default function MapComponent() {
@@ -26,6 +41,7 @@ export default function MapComponent() {
     setIsMapLoaded,
   } = useContext(MapContext);
 
+  // Load and process incident data from CSV
   useEffect(() => {
     fetch("/data/mass_shootings_geocoded_cleaned.csv")
       .then((res) => res.text())
@@ -47,7 +63,7 @@ export default function MapComponent() {
       .catch((error) => console.error("Error loading CSV:", error));
   }, [selectedYear, selectedCategory, setIncidentMarkers, setIsMapLoaded]);
 
-  // Callback to handle map load
+  // Handle map initialization
   const handleMapLoad = useCallback(
     (mapInstance) => {
       setMap(mapInstance);

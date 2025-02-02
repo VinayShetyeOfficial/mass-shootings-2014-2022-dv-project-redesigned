@@ -57,6 +57,16 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+/**
+ * Line chart visualization for temporal analysis of incidents.
+ * Shows trends of casualties over time by state.
+ *
+ * Features:
+ * - Multi-state comparison
+ * - Separate killed/injured metrics
+ * - Interactive tooltips
+ * - Dynamic data loading
+ */
 export default function LineChartsPage() {
   const [menuVisible, setMenuVisible] = useState(true);
   const [stateData, setStateData] = useState([]);
@@ -66,13 +76,12 @@ export default function LineChartsPage() {
     setMenuVisible((prev) => !prev);
   };
 
+  // Process and aggregate data by state and year
   useEffect(() => {
-    async function loadCSV() {
-      try {
-        const rawData = await d3.csv("/data/mass_shootings_2014_2022.csv");
-
+    d3.csv("/data/mass_shootings_geocoded_cleaned.csv")
+      .then((data) => {
         // Process data
-        rawData.forEach((row) => {
+        data.forEach((row) => {
           row.Year = new Date(row["Incident Date"]).getFullYear();
           row.VictimsInjured = +row["Victims Injured"] || 0;
           row.VictimsKilled = +row["Victims Killed"] || 0;
@@ -81,7 +90,7 @@ export default function LineChartsPage() {
 
         // Group by state => year => sum injured/killed
         const grouped = {};
-        rawData.forEach((d) => {
+        data.forEach((d) => {
           const { State, Year, VictimsInjured, VictimsKilled } = d;
           if (!State) return;
           if (!grouped[State]) grouped[State] = {};
@@ -111,13 +120,18 @@ export default function LineChartsPage() {
           });
 
         setStateData(finalData);
-      } catch (error) {
+      })
+      .catch((error) => {
         console.error("Error loading CSV:", error);
-      }
-    }
-
-    loadCSV();
+      });
   }, []);
+
+  // Configure chart layout options
+  const layout = {
+    autosize: true,
+    showlegend: true,
+    // ... rest of layout configuration
+  };
 
   return (
     <div className="relative min-h-screen p-6 pb-32 bg-gradient-to-br from-indigo-200 via-purple-300 to-pink-400">

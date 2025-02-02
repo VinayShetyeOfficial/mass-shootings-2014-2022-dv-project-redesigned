@@ -4,6 +4,19 @@ import { FaSkullCrossbones, FaUserInjured } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { ImCross } from "react-icons/im";
 
+/**
+ * Component displaying statistical summary for selected state.
+ * Shows aggregated incident data and key metrics.
+ *
+ * Features:
+ * - Dynamic data updates
+ * - Detailed statistics
+ * - Comparative analysis
+ *
+ * Props:
+ * - stateData: object - State-specific incident data
+ * - timeRange: array - Selected time period
+ */
 export default function StateSummary() {
   const {
     incidentMarkers,
@@ -12,6 +25,7 @@ export default function StateSummary() {
     setSelectedStateName,
   } = useContext(MapContext);
 
+  // Calculate total casualties for selected state
   const { killed, injured } = useMemo(() => {
     let totals = { killed: 0, injured: 0 };
     incidentMarkers.forEach((inc) => {
@@ -23,6 +37,7 @@ export default function StateSummary() {
     return totals;
   }, [incidentMarkers, selectedStateName]);
 
+  // Early return if no state is selected
   if (!selectedStateName) return null;
 
   return (

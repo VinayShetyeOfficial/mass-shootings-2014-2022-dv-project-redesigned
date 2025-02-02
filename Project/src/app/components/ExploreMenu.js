@@ -7,6 +7,16 @@ import RoomIcon from "@mui/icons-material/Room";
 import SearchIcon from "@mui/icons-material/Search";
 import { states } from "../../../public/data/states";
 
+/**
+ * Navigation menu for exploring different visualizations.
+ * Provides links to various data views and analysis tools.
+ *
+ * Features:
+ * - Responsive layout
+ * - Animated transitions
+ * - Active state tracking
+ */
+
 export default function ExploreMenu({ isVisible }) {
   const {
     map,

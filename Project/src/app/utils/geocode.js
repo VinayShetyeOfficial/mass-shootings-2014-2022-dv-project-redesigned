@@ -1,6 +1,14 @@
 "use client";
 
 /**
+ * Geocoding utility functions.
+ * Converts addresses to coordinates using Google Maps Geocoding API.
+ *
+ * Functions:
+ * - getCoordinatesFromAddress: Converts address string to lat/lng
+ */
+
+/**
  * getCoordinatesFromAddress(address)
  * Uses the browser's google.maps.Geocoder to convert an address to { lat, lng }.
  * Returns null if unsuccessful.

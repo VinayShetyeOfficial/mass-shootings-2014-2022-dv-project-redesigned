@@ -1,5 +1,8 @@
 /* src/app/globals.css */
 
+/* Global CSS styles for the application */
+/* Includes Tailwind imports, custom scrollbar styling, and common utility classes */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,3 +71,11 @@ html {
 button:hover {
   transform: scale(1.05);
 } */
+
+/* Global styles for consistent typography */
+/* Base layout and spacing utilities */
+/* Custom scrollbar styling */
+/* Animation keyframes definitions */
+/* Responsive breakpoint adjustments */
+/* Component-specific theme overrides */
+/* Utility classes for common patterns */

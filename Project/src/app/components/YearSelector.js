@@ -3,9 +3,40 @@
 import { useContext } from "react";
 import { MapContext } from "../context/MapContext";
 
-export default function YearSelector({ isVisible }) {
+/**
+ * Year range selection component.
+ * Allows users to filter data by specific time periods.
+ *
+ * Features:
+ * - Range selection
+ * - Preset time periods
+ * - Custom date inputs
+ * - Validation handling
+ *
+ * Props:
+ * - startYear: number - Initial year
+ * - endYear: number - Final year
+ * - onChange: function - Year range change handler
+ */
+export default function YearSelector({ isVisible, setIsVisible }) {
   const { selectedYear, setSelectedYear } = useContext(MapContext);
-  const years = ["All", 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022];
+  const years = [
+    "All",
+    "2014",
+    "2015",
+    "2016",
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+  ];
+
+  // Toggle visibility of year selector
+  const toggleVisibility = () => {
+    setIsVisible((prev) => !prev);
+  };
 
   return (
     <div

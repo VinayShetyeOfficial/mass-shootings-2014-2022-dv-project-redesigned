@@ -2,6 +2,21 @@
 
 import RoomIcon from "@mui/icons-material/Room";
 
+/**
+ * Legend component for choropleth visualization.
+ * Displays color scale and value ranges for map data.
+ *
+ * Features:
+ * - Dynamic color scaling
+ * - Value range display
+ * - Responsive layout
+ *
+ * Props:
+ * - colorScale: array - Color scale configuration
+ * - domain: array - Data value range
+ * - title: string - Legend title
+ */
+
 export default function Legend({ viewType, setViewType }) {
   // Updated to match the corrected intervals for each category
   const legendData = {

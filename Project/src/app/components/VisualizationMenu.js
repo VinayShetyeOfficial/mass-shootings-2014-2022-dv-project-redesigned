@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function VisualizationMenu({ isVisible }) {
   const pathname = usePathname();
@@ -29,6 +30,26 @@ export default function VisualizationMenu({ isVisible }) {
   const filteredPages = pages.filter(
     (page) => normalizePath(page.path) !== currentPath
   );
+
+  // Available visualization types
+  const visualizationTypes = ["map", "heatmap", "network", "line-charts"];
+
+  // Track current active visualization
+  const [activeViz, setActiveViz] = useState("map");
+
+  // Handle visualization type change
+  const handleVizChange = (vizType) => {
+    setActiveViz(vizType);
+  };
+
+  // Menu visibility toggle state
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Animation variants for menu transitions
+  const menuVariants = {
+    open: { opacity: 1, x: 0 },
+    closed: { opacity: 0, x: "-100%" },
+  };
 
   return (
     <div
