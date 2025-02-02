@@ -1,6 +1,6 @@
 # 🗺️ Mass-Shootings-USA-2014-2022 [[Live Preview](https://mass-shootings-usa-2014-2022.vercel.app/)]
 
-A comprehensive geospatial visualization Project analyzing mass shooting incidents across the United States from 2014-2022, built with Next.js, D3.js, and various visualization libraries.
+A data visualization Project analyzing mass shooting incidents across the United States from 2014-2022, built with Next.js, D3.js, and various visualization libraries.
 
 ### Geo Plot
 
